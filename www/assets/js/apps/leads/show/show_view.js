@@ -1,119 +1,9 @@
-define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl", "tpl!apps/templates/addcontactlead.tpl", 
-  "tpl!apps/templates/searchhead.tpl", "tpl!apps/templates/contact.tpl", "tpl!apps/templates/phonecontacts.tpl", "tpl!apps/templates/companies.tpl", 
-  "tpl!apps/templates/branches.tpl", "tpl!apps/templates/categories.tpl", "tpl!apps/templates/products.tpl", "backbone.syphon"], 
-	function(System, leadsTpl, addleadTpl, addcontactleadTpl, searchheadTpl, contactTpl, contactsTpl, companiesTpl, branchesTpl, categoriesTpl, productsTpl){
+define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl", "tpl!apps/templates/modifylead.tpl", "tpl!apps/templates/phonecontacts.tpl", 
+  "tpl!apps/templates/companies.tpl", "tpl!apps/templates/branches.tpl", "tpl!apps/templates/categories.tpl", "tpl!apps/templates/products.tpl", "backbone.syphon"], 
+	function(System, leadsTpl, addleadTpl, modifyleadTpl, contactsTpl, companiesTpl, branchesTpl, categoriesTpl, productsTpl){
   System.module('LeadsApp.Show.View', function(View, System, Backbone, Marionette, $, _){
     
-    /*View.Leadss = Marionette.CompositeView.extend({
-
-      className: "col-md-12",
-
-      template: leadsTpl,
-
-      itemView: View.Contact,
-
-      itemViewContainer: "ul.basic-list"
-    });        
-
-    View.AddContactLead = Marionette.ItemView.extend({      
-
-        template: addcontactleadTpl,
-
-        events: {
-          "click .ioptions #btn-edit": "editIssue",
-        },
-
-        onShow: function(){
-          //$("#leadscont").unwrap();
-          $('.selectpicker').selectpicker();
-        },
-
-        editIssue: function(e) { 
-          e.preventDefault();
-          e.stopPropagation();
-          this.trigger("edit", this.model);
-          //alert("Head to latest article");
-          //this.trigger("edit:division", this);
-        }
-    });
-
-    View.SearchHeader = Marionette.ItemView.extend({      
-
-        template: searchheadTpl,
-
-        events: {
-          "click #search": "search",
-        },
-
-        onShow: function(){
-          //$("#leadscont").unwrap();
-          //$('.selectpicker').selectpicker();
-        },
-
-        search: function(e) { 
-          e.preventDefault();
-          e.stopPropagation();
-
-          if (!navigator.contacts) {
-            alert("Contacts API not supported", "Error");
-            return;
-          }
-          var searchStr = $('#searchtext').val();
-          var searchOptions = {
-            filter : searchStr,
-            multiple : true,
-          };
-          var contactFields = ['displayName', 'name', 'nickname'];
-          navigator.contacts.find(contactFields, this.onSuccess, this.onError, searchOptions);
-        },
-
-        onSuccess: function (contacts){
-          //alert(contacts.length + ' contacts found!');
-          var results = [];
-          var cont = {};
-          for (var i = 0; i < contacts.length; i++) {
-            cont.name = contacts[i].displayName || contacts[i].name.familyName + " "+ contacts[i].name.givenName;
-            cont.phone = '';
-            if(contacts[i].phoneNumbers != null) {
-              var len = contacts[i].phoneNumbers.length;
-              if(len > 0) {
-                for(var j = 0; j < len; j++) {
-                  cont.phone += contacts[i].phoneNumbers[j].value + ', ';
-                }
-              }
-            }
-            results.push(cont);
-          };
-          var THAT = this;
-          setTimeout(function () {
-            alert(JSON.stringify(results));
-            THAT.trigger("results", results);
-          }, 2000);
-        },
-
-        onError: function (er){
-          alert('contact search error');
-        }
-    });
-
-    View.Contact = Marionette.ItemView.extend({      
-
-        template: contactTpl,
-
-        tagName: "li",
-
-        events: {
-          "click #btn-read": "itemClicked"
-        },
-
-        itemClicked: function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          this.trigger("submit", this.model);
-        }
-    });*/
-
-    View.Leads = Marionette.ItemView.extend({      
+    View.GeneratedLeads = Marionette.ItemView.extend({      
 
         template: leadsTpl,
 
@@ -123,6 +13,8 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
 
         onShow: function(){
           $("#leadscont").unwrap();
+
+          $(".page-header .title").text('MY GENERATED LEADS');
           
           var ul = $('.row > div');
           ul.empty();
@@ -130,7 +22,7 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
           $.get(System.coreRoot + "/gateway.php?generatedLeads=1", function(result) {
               var res = JSON.parse(result);
               res.forEach(function(element, index){
-                var tpl = $('<div class="col-xs-6" style="border-radius:3px;"><div class="panel" style="border-bottom:8px solid #f7c331;"><div class="lead-img"><img src="img/person.png" alt="img" class="img"></div><div class="lead-text"><b>'+element['name']+'</b><br><span class="desc">'+element['phone']+'</span><br><span class="desc">Product - Latest Status</span></div></div></div>');
+                var tpl = $('<div class="col-xs-6" style="border-radius:3px;"><div class="panel" style="border-bottom:8px solid #f7c331;"><div class="lead-img"><img src="img/person.png" alt="img" class="img"></div><div class="lead-text"><b>'+element.name+'</b><br><span class="desc"><i class="fa fa-phone"></i> '+element.tel+'</span><br><span class="desc"><i class="fa fa-institution"></i> '+element.company.name+'</span><br><span class="desc"><i class="fa fa-cube"></i> '+element.product.name+'</span><br><b><i class="fa fa-info-circle" style="color:#399bff"></i> '+element.status+'</b></div></div></div>');
                 tpl.appendTo(ul);
               });
           });
@@ -142,6 +34,47 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
           this.trigger("edit", this.model);
           //alert("Head to latest article");
           //this.trigger("edit:division", this);
+        }
+    });
+
+    View.AssignedLeads = Marionette.ItemView.extend({      
+
+        template: leadsTpl,
+
+        events: {
+          //"click .asslead": "modifyStatus"
+        },
+
+        onShow: function(){
+          $("#leadscont").unwrap();
+
+          $(".page-header .right").css('display', 'none');
+          
+          var ul = $('.row > div');
+          ul.empty();
+
+          $.get(System.coreRoot + "/gateway.php?assignedLeads=1", function(result) {
+              var res = JSON.parse(result);
+              res.forEach(function(element, index){
+                var tpl = $('<div class="col-xs-6 asslead" style="border-radius:3px;"><p style="display:none">'+element.id+'</p><div class="panel" style="border-bottom:8px solid #f7c331;"><div class="lead-img"><img src="img/person.png" alt="img" class="img"></div><div class="lead-text"><b>'+element.name+'</b><br><span class="desc"><i class="fa fa-phone"></i> '+element.tel+'</span><br><span class="desc"><i class="fa fa-cube"></i> '+element.product.name+'</span><br><b><i class="fa fa-info-circle" style="color:#399bff"></i> '+element.status+'</b></div></div></div>');
+                tpl.appendTo(ul);
+              });
+          });
+          var THAT = this;
+          setTimeout(function(){
+            $('.asslead').on('click', function(e){
+              THAT.modifyStatus(e);
+            });
+          }, 300);
+        },
+
+        modifyStatus: function(e) { 
+          e.preventDefault();
+          e.stopPropagation();
+          //this.trigger("edit", this.model);
+          System.modifyLead = parseInt($(e.currentTarget).find('p').text(), 10);
+          //swal("Edit!", "Head to modify lead. ID: "+System.modifyLead, "info");
+          System.execute("leads:modify");
         }
     });
 
@@ -515,7 +448,6 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
           "click .btnsub": "addLead",
           "change #companysel": "updateCompanyChildren",
           "change #categorysel": "updateProducts",
-          "change .btnsub": "addLead",
         },
 
         onShow: function(){
@@ -552,7 +484,7 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
             tplw.appendTo(catsel);
             var struct = System.structure[System.companyid];
             struct.categories.forEach(function(element, index){
-              var tpl3 = $('<option data-icon="fa fa-cubes" value="'+element.id+'">'+element.name+'</option>');
+              var tpl3 = $('<option data-icon="fa fa-cubes" data-index="'+index+'" value="'+element.id+'">'+element.name+'</option>');
               tpl3.appendTo(catsel);
             });
           }else{
@@ -685,11 +617,66 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
           e.stopPropagation();
           var data = Backbone.Syphon.serialize(this);
           //alert(JSON.stringify(data));
-          this.trigger("create", data);
+          if (data['name'] == '' || data['phone'] == '' || data['company'] == '' || data['product'] == '' ) {
+            swal("Missing Details!", "Please ensure you enter all necessary fields.", "error");
+          }else{
+            this.trigger("create", data);
+          }
+          
         },
 
         onFormDone: function() {
+          swal("Success :)", "Lead created", "success");
           System.execute("leads:companies");
+        }
+    });
+
+    View.ModifyLead = Marionette.ItemView.extend({      
+
+        template: modifyleadTpl,
+
+        events: {
+          "click .btnsub": "modifyLead",
+        },
+
+        onShow: function(){
+          var ul = $('.leadtails');
+          ul.empty();
+
+          $('.selectpicker').selectpicker();
+
+          $.get(System.coreRoot + "/gateway.php?getLead="+System.modifyLead, function(result) {
+              var element = JSON.parse(result);
+              var tpl = $('<div class="col-xs-12" style="z-index:300;"><div class="panel" style="border-bottom:8px solid #f7c331;margin:10px;"><div class="lead-img" style="display: inline-block;width:30%"><img src="img/person.png" alt="img" class="img"></div><div class="lead-text" style="display: inline-block;font-size:2.8vmin;line-height:5vmin;width:60%; margin-left:25px; text-align:left; vertical-align:middle;"><b>'+element.name+'</b><br><span class="desc"><i class="fa fa-phone"></i> '+element.tel+'</span><br><span class="desc"><i class="fa fa-institution"></i> '+element.company.name+'</span><br><span class="desc"><i class="fa fa-cube"></i> '+element.product.name+'</span><br><b><i class="fa fa-info-circle" style="color:#399bff"></i> '+element.status+'</b></div></div></div>');
+              tpl.appendTo(ul);
+
+              /*if (element.status != 'Lead Generated' && element.status != 'Lead Assigned') {
+                $('#statussel option[value="'+element.status+'"]').prop('selected', true);
+              }; */
+          });
+          
+          setTimeout(function (){                   
+            $('.selectpicker').selectpicker('refresh');
+          }, 300);
+        },
+
+        modifyLead: function(e) { 
+          e.preventDefault();
+          e.stopPropagation();
+          var data = Backbone.Syphon.serialize(this);
+          data['leadid'] = System.modifyLead;
+          //alert(JSON.stringify(data));
+          if (data['leadid'] == '' || data['status'] == '') {
+            swal("Missing Details!", "Please ensure you enter all necessary fields.", "error");
+          }else{
+            this.trigger("modify", data);
+          }
+          
+        },
+
+        onFormDone: function() {
+          swal("Updated :)", "Prospect status modified", "success");
+          System.execute("leads:assigned");
         }
     });
 

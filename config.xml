@@ -1,4 +1,4 @@
-<widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="com.qet.kobe" version="1.0.0">
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="com.qet.chase.360me" version="1.0.0">
   <name>Chase 360me</name>
   <description>Chase 360me Lead generation and tracking mobile app</description>
   <author href="http://qet.co.ke" email="support@qet.co.ke">Mbaka Maera</author>

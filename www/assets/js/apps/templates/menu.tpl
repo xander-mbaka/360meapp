@@ -31,11 +31,10 @@
 
     <ul class="sidebar-panel nav">
       <li><a href="#dash"><span class="icon color5"><i class="fa fa-home"></i></span>Dashboard</a></li>
-      <li><a href="#addlead"><span class="icon color6"><i class="fa fa-user"></i></span>Create Lead</a></li>
-      <li><a href="#leads"><span class="icon color6"><i class="fa fa-user"></i></span>Assigned Leads<span class="label label-default">10</span></a></li>
-      <li><a href="#leads"><span class="icon color6"><i class="fa fa-user"></i></span>Generated Leads<span class="label label-default">29</span></a></li>
-      <li><a href="#notifications"><span class="icon color11"><i class="fa fa-info-circle"></i></span>Notifications</a><span class="label label-default">5</span></li>
-      <li><a href="#reports"><span class="icon color8"><i class="fa fa-bar-chart"></i></span>Reports</a></li>
-      <li><a href="#profile"><span class="icon color12"><i class="fa fa-smile-o"></i></span>Me Profile</a></li>
+      <li><a href="#addlead"><span class="icon color13"><i class="fa fa-user"></i></span>Create Lead</a></li>
+      <li><a href="#assigned"><span class="icon color7"><i class="fa fa-users"></i></span>Assigned Leads</a></li>
+      <li><a href="#generated"><span class="icon color9"><i class="fa fa-users"></i></span>Generated Leads</a></li>
+      <li><a href="#notifications"><span class="icon color11"><i class="fa fa-info-circle"></i></span>Notifications</a><!--span class="label label-default">5</span--></li>
+      <li><a href="#profile"><span class="icon color3"><i class="fa fa-smile-o"></i></span>Me Profile</a></li>
     </ul>
 </div>

@@ -491,19 +491,20 @@ Top Right
 Sidebar 
 ================================================================================= */
 .sidebar {
-  width: 50%;
+  width: 40%;
   position: fixed;
   height: 100%;
   top: 60px;
   left: 0;
   font-family: 'Montserrat', sans-serif;
-  background: #3d464d;
+  background: #232836;
   z-index: 0;
   font-size: 13px;
   font-weight: normal;
   z-index: 500;
   color: rgba(255, 255, 255, 0.8);
   max-width: 300px;
+  border-right: 3px dashed #626876;
 }
 .sidebar .label {
   font-size: 10px;
@@ -544,7 +545,6 @@ Sidebar
   left: 20px;
   top: 8px;
   display: block;
-  color: rgba(255, 255, 255, 0.6);
   font-size: 19px;
   border-radius: 3px;
   text-align: center;

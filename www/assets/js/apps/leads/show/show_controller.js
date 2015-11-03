@@ -1,12 +1,17 @@
 define(["app", "apps/leads/show/show_view"], function(System, View){
   System.module('LeadsApp.Show', function(Show, System, Backbone, Marionette, $, _){
     Show.Controller = {
-      showLeads: function(){ 
-        var view = new View.Leads();
+      showGeneratedLeads: function(){ 
+        var view = new View.GeneratedLeads();
         System.contentRegion.show(view);
 	    },
 
-      quickLead: function(a){ 
+      showAssignedLeads: function(){ 
+        var view = new View.AssignedLeads();
+        System.contentRegion.show(view);
+      },
+
+      addLead: function(a){ 
         var view = new View.AddLead();
         
         System.contentRegion.show(view);
@@ -14,8 +19,22 @@ define(["app", "apps/leads/show/show_view"], function(System, View){
         view.on('create', function(data) {
           data['operation'] = 'create';
             $.post(System.coreRoot + '/gateway.php', data, function(result) {
-              if (result == 1) {
-                swal("Success :)", "Lead created", "success");
+              if (result == 1) {                
+                view.triggerMethod("form:done");
+              };
+            });
+        });
+      },
+
+      modifyLead: function(a){ 
+        var view = new View.ModifyLead();
+        
+        System.contentRegion.show(view);
+
+        view.on('modify', function(data) {
+          data['operation'] = 'modifyStatus';
+            $.post(System.coreRoot + '/gateway.php', data, function(result) {
+              if (result == 1) {                
                 view.triggerMethod("form:done");
               };
             });
@@ -97,22 +116,6 @@ define(["app", "apps/leads/show/show_view"], function(System, View){
               if (result == 1) {
                 alert('Success: Lead created');
                 //admin.triggerMethod("form:done");
-              };
-            });
-        });
-      },
-
-      addLead: function(a){ 
-        var view = new View.Contacts();
-        
-        System.contentRegion.show(view);
-
-        view.on('create', function(data) {
-          data['operation'] = 'create';
-            $.post(System.coreRoot + '/gateway.php', data, function(result) {
-              if (result == 1) {
-                swal("Success :)", "Lead created", "success");
-                view.triggerMethod("form:done");
               };
             });
         });

@@ -3,7 +3,8 @@ define(["app", "apps/leads/show/show_controller", "tpl!apps/templates/searchcont
 
     LeadsApp.Router = Marionette.AppRouter.extend({
       appRoutes: {
-        "leads" : "showLeads",
+        "generated" : "showGeneratedLeads",
+        "assigned" : "showAssignedLeads",
         "quicklead" : "quickLead",
         "addlead" : "companies",
         "branches" : "branches",
@@ -26,15 +27,21 @@ define(["app", "apps/leads/show/show_controller", "tpl!apps/templates/searchcont
     var layout = new SearchLayout();
 
     var API = {
-      showLeads: function(){
+      showGeneratedLeads: function(){
         //System.contentRegion.show();
-        showController.showLeads();
+        showController.showGeneratedLeads();
+        //System.execute("set:active:header", "Menu");
+      },
+
+      showAssignedLeads: function(){
+        //System.contentRegion.show();
+        showController.showAssignedLeads();
         //System.execute("set:active:header", "Menu");
       },
 
       quickLead: function(a){
         //System.contentRegion.show();
-        showController.quickLead(a);
+        showController.addLead(a);
         //System.execute("set:active:header", "Menu");
       },
 
@@ -70,7 +77,13 @@ define(["app", "apps/leads/show/show_controller", "tpl!apps/templates/searchcont
 
       finalize: function(){
         //System.contentRegion.show();
-        showController.quickLead();
+        showController.addLead();
+        //System.execute("set:active:header", "Menu");
+      },
+
+      modify: function(){
+        //System.contentRegion.show();
+        showController.modifyLead();
         //System.execute("set:active:header", "Menu");
       },
 
@@ -94,6 +107,11 @@ define(["app", "apps/leads/show/show_controller", "tpl!apps/templates/searchcont
     System.on("leads:quickadd", function(a){
       System.navigate("quicklead");
       API.quickLead(a);
+    });
+
+    System.commands.setHandler("leads:assigned", function(){
+      System.navigate("assigned");
+      API.showAssignedLeads();
     });
 
     System.commands.setHandler("leads:companies", function(a){
@@ -124,6 +142,11 @@ define(["app", "apps/leads/show/show_controller", "tpl!apps/templates/searchcont
     System.commands.setHandler("leads:finalize", function(a){
       System.navigate("finalize");
       API.finalize(a);
+    });
+
+    System.commands.setHandler("leads:modify", function(){
+      System.navigate("modify");
+      API.modify();
     });
 
      System.commands.setHandler("leads:search", function(){

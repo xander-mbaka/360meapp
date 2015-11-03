@@ -6,7 +6,7 @@ define(["marionette", "sweetalert", "dotdotdot"], function(Marionette){
     contentRegion: "#content"
   });
   
-  System.coreRoot = "http://192.168.0.101/360me";
+  System.coreRoot = "http://192.168.0.100/360me";
 
   System.phoneContacts = [];
 

@@ -43,7 +43,7 @@ define(["app", "tpl!apps/templates/menu.tpl", "tpl!apps/templates/empty.tpl"],
 
           $('#content').on('click', function(){
               wide = $(document).width();
-              if (wide > 600) { width = 250; widthneg = -250;}else{width = '50%'; widthneg = '-50%';}
+              if (wide > 600) { width = 200; widthneg = -200;}else{width = '40%'; widthneg = '-40%';}
               if($('.sidebar').hasClass('hidden')){
                  
               }else{
@@ -57,13 +57,16 @@ define(["app", "tpl!apps/templates/menu.tpl", "tpl!apps/templates/empty.tpl"],
           
           $('.sidebar-open-button').on('click', function(){
               wide = $(document).width();
-              if (wide > 600) { width = 250; widthneg = -250;}else{width = '50%'; widthneg = '-50%';}
+              if (wide > 600) { width = 200; widthneg = -200;}else{width = '40%'; widthneg = '-40%';}
               if($('.sidebar').hasClass('hidden')){
                   $('.sidebar').removeClass('hidden');
+                  $('.sidebar').animate({
+                      'width' : width
+                  }, 250);
                   $('.content.main').animate({
                       'marginLeft' : width,
                       'marginRight' : widthneg
-                  }, 250);  //if window.width > 700px, margin = 250px, otherwise: 50%
+                  }, 250);  //if window.width > 700px, margin = 250px, otherwise: 40%
               }else{
                   $('.sidebar').addClass('hidden');
                   $('.content.main').animate({
@@ -75,8 +78,11 @@ define(["app", "tpl!apps/templates/menu.tpl", "tpl!apps/templates/empty.tpl"],
 
           $('.sidebar-open-button-mobile').on('click', function(){
               wide = $(document).width();
-              if (wide > 600) { width = 250; widthneg = -250;}else{width = '50%'; widthneg = '-50%';}
+              if (wide > 600) { width = 200; widthneg = -200;}else{width = '40%'; widthneg = '-40%';}
               if($('.sidebar').hasClass('hidden')){
+                  $('.sidebar').animate({
+                      'width' : width
+                  }, 250);
                   $('.sidebar').removeClass('hidden');
                   $('.content.main').animate({
                       'marginLeft' : width,
