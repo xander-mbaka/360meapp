@@ -142,6 +142,11 @@ define(["app", "apps/leads/show/show_view"], function(System, View){
           var result = new View.Contacts({ collection: collection});
           layout.resultRegion.show(result);
         });
+      },
+
+      showNotifications: function(){ 
+        var view = new View.Notifications();
+        System.contentRegion.show(view);
       }
     };
   });

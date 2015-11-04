@@ -10,6 +10,8 @@ define(["app", "apps/leads/show/show_controller", "tpl!apps/templates/searchcont
         "branches" : "branches",
         "categories" : "categories",
         "products" : "products",
+        "modify" : "modify",
+        "notifications" : "notifications",
         "searchcontact" : "searchContact"
       }
     });
@@ -87,6 +89,12 @@ define(["app", "apps/leads/show/show_controller", "tpl!apps/templates/searchcont
         //System.execute("set:active:header", "Menu");
       },
 
+      notifications: function(){
+        //System.contentRegion.show();
+        showController.showNotifications();
+        //System.execute("set:active:header", "Menu");
+      },
+
       searchContact: function(){
         System.contentRegion.show(layout);
         showController.searchContact(layout);
@@ -102,6 +110,11 @@ define(["app", "apps/leads/show/show_controller", "tpl!apps/templates/searchcont
     System.on("leads:add", function(){
       System.navigate("companies");
       API.companies();
+    });
+
+    System.on("profile:notifications", function(){
+      System.navigate("notifications");
+      API.notifications();
     });
 
     System.on("leads:quickadd", function(a){

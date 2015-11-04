@@ -44,6 +44,7 @@ requirejs.config({
     calendar: "plugins/full-calendar/fullcalendar",
     daterange: "plugins/date-range-picker/daterangepicker",
 
+    touchswipe: "plugins/jquery.touchswipe.min",
     plugins: "plugins/plugins",
     pieplug: "plugins/easypiechart/easypiechart-plugin",
     dash: "dash",
@@ -85,6 +86,7 @@ requirejs.config({
     raphael: ["eve"],
     morris: ["raphael"],
     jqueryui: ["jquery"],
+    touchswipe: ["jquery"],
     localstorage: ["backbone"],
     dotdotdot: ["jquery"],
     bootstrap: ["jquery"],

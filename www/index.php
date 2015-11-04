@@ -22,11 +22,12 @@
         <div id="menu"></div>
         <div id="content" class="content main"></div>
 
-        <!--script type="text/javascript" src="cordova.js"></script-->
+        <!--script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript">
             app.initialize();
-        </script>
+        </script-->
         <script data-main="assets/js/require_main.js?bust=v1" src="assets/js/vendor/require.js?bust=v1"></script>
+        <!--script data-main="assets/dist/main.js?bust=v1" src="assets/js/vendor/require.js?bust=v1"></script-->
     </body>
 </html>

@@ -6,6 +6,17 @@
 ================================================================================*/
 
 /* Color Class */
+.panel-overlay{
+   background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+    display: none;
+    height: 100%;
+    left: 0;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 300005;
+}
 .color1 {
   color: #37363e;
 }
@@ -491,8 +502,9 @@ Top Right
 Sidebar 
 ================================================================================= */
 .sidebar {
-  width: 40%;
+  width: 50%;
   position: fixed;
+  margin-left: -50%;
   height: 100%;
   top: 60px;
   left: 0;
@@ -505,6 +517,9 @@ Sidebar
   color: rgba(255, 255, 255, 0.8);
   max-width: 300px;
   border-right: 3px dashed #626876;
+  -webkit-box-shadow: 5px 10px 5px 5px rgba(89,123,145,0.15);
+  -moz-box-shadow: 5px 10px 5px 5px rgba(89,123,145,0.15);
+  box-shadow: 5px 10px 5px 5px rgba(89,123,145,0.15);
 }
 .sidebar .label {
   font-size: 10px;

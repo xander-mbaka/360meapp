@@ -3,18 +3,18 @@
     <img src="img/icon.png" style="width:48px; margin-top:5px; margin-left:10px">
 
     <!-- Start Sidebar Show Hide Button -->
-    <a href="#" class="sidebar-open-button"><i class="fa fa-bars"></i></a>
-    <a href="#" class="sidebar-open-button-mobile"><i class="fa fa-bars"></i></a>
+    <a href="#" class="sidebar-open-button"><i class="fa  fa-arrows-h"></i></a>
+    <a href="#" class="sidebar-open-button-mobile"><i class="fa  fa-arrows-h"></i></a>
     <!-- End Sidebar Show Hide Button -->
 
     <!-- Start Top Right -->
     <ul class="top-right">
 
     <li class="dropdown link">
-      <a href="#" data-toggle="dropdown" class="dropdown-toggle profilebox"><img src="img/profileimg.png" alt="img"><b>Alex Mwafrika</b><span class="caret"></span></a>
+      <a href="#" data-toggle="dropdown" class="dropdown-toggle profilebox"><img src="img/profileimg.png" alt="img"><b>App User</b><span class="caret"></span></a>
         <ul class="dropdown-menu dropdown-menu-list dropdown-menu-right">
           <li role="presentation" class="dropdown-header">Quick Links</li>
-          <li><a href="#notifications"><i class="fa falist fa-inbox"></i>Notifications<span class="badge label-danger">4</span></a></li>
+          <li><a href="#notifications"><i class="fa falist fa-inbox"></i>Notifications</a></li>
           <li><a href="#profile"><i class="fa falist fa-wrench"></i>Me Profile</a></li>
           <li class="divider"></li>
           <li><a href="#login"><i class="fa falist fa-lock"></i>Lock App</a></li>

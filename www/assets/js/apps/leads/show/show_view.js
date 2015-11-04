@@ -1,6 +1,6 @@
 define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl", "tpl!apps/templates/modifylead.tpl", "tpl!apps/templates/phonecontacts.tpl", 
-  "tpl!apps/templates/companies.tpl", "tpl!apps/templates/branches.tpl", "tpl!apps/templates/categories.tpl", "tpl!apps/templates/products.tpl", "backbone.syphon"], 
-	function(System, leadsTpl, addleadTpl, modifyleadTpl, contactsTpl, companiesTpl, branchesTpl, categoriesTpl, productsTpl){
+  "tpl!apps/templates/companies.tpl", "tpl!apps/templates/branches.tpl", "tpl!apps/templates/categories.tpl", "tpl!apps/templates/products.tpl", "tpl!apps/templates/notifications.tpl", "backbone.syphon"], 
+	function(System, leadsTpl, addleadTpl, modifyleadTpl, contactsTpl, companiesTpl, branchesTpl, categoriesTpl, productsTpl, notificationsTpl){
   System.module('LeadsApp.Show.View', function(View, System, Backbone, Marionette, $, _){
     
     View.GeneratedLeads = Marionette.ItemView.extend({      
@@ -12,7 +12,7 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
         },
 
         onShow: function(){
-          $("#leadscont").unwrap();
+          //$("#leadscont").unwrap();
 
           $(".page-header .title").text('MY GENERATED LEADS');
           
@@ -21,10 +21,25 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
 
           $.get(System.coreRoot + "/gateway.php?generatedLeads=1", function(result) {
               var res = JSON.parse(result);
+              var tp;            
               res.forEach(function(element, index){
-                var tpl = $('<div class="col-xs-6" style="border-radius:3px;"><div class="panel" style="border-bottom:8px solid #f7c331;"><div class="lead-img"><img src="img/person.png" alt="img" class="img"></div><div class="lead-text"><b>'+element.name+'</b><br><span class="desc"><i class="fa fa-phone"></i> '+element.tel+'</span><br><span class="desc"><i class="fa fa-institution"></i> '+element.company.name+'</span><br><span class="desc"><i class="fa fa-cube"></i> '+element.product.name+'</span><br><b><i class="fa fa-info-circle" style="color:#399bff"></i> '+element.status+'</b></div></div></div>');
-                tpl.appendTo(ul);
+                if (index%2 == 0) {
+                  tp = $('<div class="row"></div>');
+                  var tpl = $('<div class="col-xs-6" style="border-radius:3px;"><div class="panel" style="border-bottom:8px solid #f7c331;"><div class="lead-img"><img src="img/person.png" alt="img" class="img"></div><div class="lead-text"><b>'+element.name+'</b><br><span class="desc"><i class="fa fa-phone"></i> '+element.tel+'</span><br><span class="desc"><i class="fa fa-institution"></i> '+element.company.name+'</span><br><span class="desc"><i class="fa fa-cube"></i> '+element.product.name+'</span><br><b><i class="fa fa-info-circle" style="color:#399bff"></i> '+element.status+'</b></div></div></div>');
+                  tpl.appendTo(tp);
+                }else{
+                  var tpl = $('<div class="col-xs-6" style="border-radius:3px;"><div class="panel" style="border-bottom:8px solid #f7c331;"><div class="lead-img"><img src="img/person.png" alt="img" class="img"></div><div class="lead-text"><b>'+element.name+'</b><br><span class="desc"><i class="fa fa-phone"></i> '+element.tel+'</span><br><span class="desc"><i class="fa fa-institution"></i> '+element.company.name+'</span><br><span class="desc"><i class="fa fa-cube"></i> '+element.product.name+'</span><br><b><i class="fa fa-info-circle" style="color:#399bff"></i> '+element.status+'</b></div></div></div>');
+                  tpl.appendTo(tp);
+                  tp.appendTo(ul);
+                  tp = $('<div class="row"></div>');
+                }
               });
+              
+              setTimeout(function(){
+                if (tp.children().length > 0) {
+                  tp.appendTo(ul);
+                }
+              }, 500);
           });
         },
 
@@ -46,26 +61,40 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
         },
 
         onShow: function(){
-          $("#leadscont").unwrap();
+          //$("#leadscont").unwrap();
 
           $(".page-header .right").css('display', 'none');
           
           var ul = $('.row > div');
           ul.empty();
 
+          var THAT = this;
+
           $.get(System.coreRoot + "/gateway.php?assignedLeads=1", function(result) {
               var res = JSON.parse(result);
+              var tp;            
+              
               res.forEach(function(element, index){
-                var tpl = $('<div class="col-xs-6 asslead" style="border-radius:3px;"><p style="display:none">'+element.id+'</p><div class="panel" style="border-bottom:8px solid #f7c331;"><div class="lead-img"><img src="img/person.png" alt="img" class="img"></div><div class="lead-text"><b>'+element.name+'</b><br><span class="desc"><i class="fa fa-phone"></i> '+element.tel+'</span><br><span class="desc"><i class="fa fa-cube"></i> '+element.product.name+'</span><br><b><i class="fa fa-info-circle" style="color:#399bff"></i> '+element.status+'</b></div></div></div>');
-                tpl.appendTo(ul);
+                if (index%2 == 0) {
+                  tp = $('<div class="row"></div>');
+                  var tpl = $('<div class="col-xs-6 asslead" style="border-radius:3px;"><p style="display:none">'+element.id+'</p><div class="panel" style="border-bottom:8px solid #f7c331;"><div class="lead-img"><img src="img/person.png" alt="img" class="img"></div><div class="lead-text"><b>'+element.name+'</b><br><span class="desc"><i class="fa fa-phone"></i> '+element.tel+'</span><br><span class="desc"><i class="fa fa-cube"></i> '+element.product.name+'</span><br><b><i class="fa fa-info-circle" style="color:#399bff"></i> '+element.status+'</b></div></div></div>');
+                  tpl.appendTo(tp);
+                }else{
+                  var tpl = $('<div class="col-xs-6 asslead" style="border-radius:3px;"><p style="display:none">'+element.id+'</p><div class="panel" style="border-bottom:8px solid #f7c331;"><div class="lead-img"><img src="img/person.png" alt="img" class="img"></div><div class="lead-text"><b>'+element.name+'</b><br><span class="desc"><i class="fa fa-phone"></i> '+element.tel+'</span><br><span class="desc"><i class="fa fa-cube"></i> '+element.product.name+'</span><br><b><i class="fa fa-info-circle" style="color:#399bff"></i> '+element.status+'</b></div></div></div>');
+                  tpl.appendTo(tp);
+                  tp.appendTo(ul);
+                  tp = $('<div class="row"></div>');
+                }
+              });
+              
+              if (tp.children().length > 0) {
+                  tp.appendTo(ul);
+              };
+
+              $('.asslead').on('click', function(e){
+                THAT.modifyStatus(e);
               });
           });
-          var THAT = this;
-          setTimeout(function(){
-            $('.asslead').on('click', function(e){
-              THAT.modifyStatus(e);
-            });
-          }, 300);
         },
 
         modifyStatus: function(e) { 
@@ -73,7 +102,7 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
           e.stopPropagation();
           //this.trigger("edit", this.model);
           System.modifyLead = parseInt($(e.currentTarget).find('p').text(), 10);
-          //swal("Edit!", "Head to modify lead. ID: "+System.modifyLead, "info");
+          //swal("Edit Mode!", "Now modifying lead. ID: "+System.modifyLead, "info");
           System.execute("leads:modify");
         }
     });
@@ -100,6 +129,8 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
           var ul = $('#companies');
           ul.empty();
 
+          var THAT = this;
+
           if (System.structure.length == 0) {
             $.get(System.coreRoot + "/gateway.php?structure", function(result) {
               var res = JSON.parse(result);
@@ -108,27 +139,37 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
                 tpl.appendTo(ul);
                 System.structure[element.company.id] = element;
               });
+
+              setTimeout(function(){
+                THAT.initList();
+              }, 600);
             });            
           }else{
             System.structure.forEach(function(element, index){
               var tpl = $('<li><p style="display:none">'+element.company.id+'</p><div class="imgc"><img src="img/companies/'+element.company.logo+'" alt="img" style="width:100%"></div><h3>'+element.company.name+'</h3><span class="desc">'+element.company.descr+'</span></li>');
               tpl.appendTo(ul);
             });
-          }
-          var THAT = this;
-          setTimeout(function(){
-            $("#companies > li span").dotdotdot({ ellipsis : ' ... ' });
 
-            $("#companies > li span, #companies > li h3").on('click', function(){ 
-              THAT.viewDesc(parseInt($(this).parent().find('p').text(), 10));
-            });
-
-            $("#companies > li .imgc").on('click', function(){ 
-              THAT.viewNext(parseInt($(this).parent().find('p').text(), 10));
-            });
-
-          }, 500);
+            setTimeout(function(){
+                THAT.initList();
+              }, 600);            
+          }          
           
+        },
+
+        initList: function() {
+          var THAT = this;
+
+          $("#companies > li span").dotdotdot({ ellipsis : ' ... ' });
+            
+          $("#companies > li span, #companies > li h3").on('click', function(){ 
+            THAT.viewDesc(parseInt($(this).parent().find('p').text(), 10));
+          });
+          
+          $("#companies > li .imgc").on('click', function(){ 
+            THAT.viewNext(parseInt($(this).parent().find('p').text(), 10));
+          });
+      
         },
 
         viewNext: function(id) {
@@ -260,11 +301,8 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
           var struct = System.structure[System.companyid];
 
           if (System.prodView == 'company') {
-            System.productSelect = struct.products;
-            
+            System.productSelect = struct.products;            
           }else{
-            //console.log(System.categoryid);
-            //console.log(struct.categories);
             System.productSelect = struct.categories[System.categoryIndex].products;
           }
 
@@ -273,10 +311,10 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
             tpl.appendTo(ul);
           });
 
-          var THAT = this;
           setTimeout(function(){
             $("#products > li span").dotdotdot({ ellipsis : ' ... ' });
-          }, 300);
+          }, 500);         
+
         },
 
         viewContacts: function(e) {
@@ -374,18 +412,19 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
             }
           }
           if (cont.name != undefined && cont.phone != undefined) {
-              
-              var tpl = $('<li><b>'+cont.name+'</b><br><span class="desc one">'+cont.phone+'</span><br><span class="desc two">'+cont.email+'</span><span class="add"><i class="fa fa-user"></i></span></li>');
-              tpl.appendTo(ul);
-
               System.phoneContacts.push(cont);
           }
         }
+
         if (contacts.length === 0) {
           var tpl = $('<li><b>No contacts</b></li>');
           tpl.appendTo(ul);
         }
-          
+
+        var THAT = this;
+        setTimeout(function(){
+          THAT.sortResults(System.phoneContacts, 'name', true);
+        }, 7000);
       },
         
       sortResults: function(result, prop, asc) {
@@ -649,15 +688,7 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
               var element = JSON.parse(result);
               var tpl = $('<div class="col-xs-12" style="z-index:300;"><div class="panel" style="border-bottom:8px solid #f7c331;margin:10px;"><div class="lead-img" style="display: inline-block;width:30%"><img src="img/person.png" alt="img" class="img"></div><div class="lead-text" style="display: inline-block;font-size:2.8vmin;line-height:5vmin;width:60%; margin-left:25px; text-align:left; vertical-align:middle;"><b>'+element.name+'</b><br><span class="desc"><i class="fa fa-phone"></i> '+element.tel+'</span><br><span class="desc"><i class="fa fa-institution"></i> '+element.company.name+'</span><br><span class="desc"><i class="fa fa-cube"></i> '+element.product.name+'</span><br><b><i class="fa fa-info-circle" style="color:#399bff"></i> '+element.status+'</b></div></div></div>');
               tpl.appendTo(ul);
-
-              /*if (element.status != 'Lead Generated' && element.status != 'Lead Assigned') {
-                $('#statussel option[value="'+element.status+'"]').prop('selected', true);
-              }; */
           });
-          
-          setTimeout(function (){                   
-            $('.selectpicker').selectpicker('refresh');
-          }, 300);
         },
 
         modifyLead: function(e) { 
@@ -677,6 +708,30 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
         onFormDone: function() {
           swal("Updated :)", "Prospect status modified", "success");
           System.execute("leads:assigned");
+        }
+    });
+
+    View.Notifications = Marionette.ItemView.extend({      
+
+        template: notificationsTpl,
+
+        events: {
+          //"click .asslead": "modifyStatus"
+        },
+
+        onShow: function(){
+          //$("#leadscont").unwrap();          
+          var ul = $('#messages');
+          ul.empty();
+
+          $.get(System.coreRoot + "/gateway.php?messages=1", function(result) {
+              var res = JSON.parse(result);
+              $('span.notifno').text(res.length);
+              res.forEach(function(element, index){
+                var tpl = $('<li><a href="#" class="item clearfix" style="line-height:3.5vmin"><span class="from" style="line-height:3vmin">'+element.sender.name+'</span>'+element.message+'<span class="date" style="line-height:1.5vmin">'+element.date+'</span></a></li>');
+                tpl.appendTo(ul);               
+              });
+          });
         }
     });
 
