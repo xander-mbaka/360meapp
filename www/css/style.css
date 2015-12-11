@@ -974,18 +974,55 @@ Page Header
   width: 100%;
   height: 100%;
   z-index: 9999;
-  background: #3d464d;
+  background: #232836;
   opacity: 0.99;
 }
 .loading img {
-  width: 40px;
-  height: 40px;
+  width: 100px;
+  height: 100px;
   position: absolute;
   left: 50%;
   right: 50%;
   bottom: 50%;
   top: 50%;
-  margin: -20px;
+  margin: -50px;
+}
+
+.loading span {
+  width: 144px;
+  height: 50px;
+  position: absolute;
+  left: calc(50% - 72px);
+  top: calc(50% + 60px);
+  text-align: center;
+}
+#fetching {
+  display: none;
+  position: fixed;
+  left: 0px;
+  top: 60px;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background: #232836;
+  opacity: 0.97;
+}
+#fetching img {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  left: calc(50% - 25px);
+  top: calc(50% - 55px);
+}
+
+#fetching span {
+  color: #999999;
+  width: 100%;
+  height: 50px;
+  position: absolute;
+  left: 0;
+  bottom: 5%;
+  text-align: center;
 }
 /* =================================================================================
 Presentation 
@@ -1873,8 +1910,9 @@ Login Pages
     padding: 10px 5px;
     position: fixed;
     right: 40px;
+    left: 40px;
     text-align: right;
-    width: 50%;
+    font-size: 3.5vmin;
 }
 .login-form .footer-links a {
   color: #76757B;

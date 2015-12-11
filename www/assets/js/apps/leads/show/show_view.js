@@ -1,6 +1,9 @@
-define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl", "tpl!apps/templates/modifylead.tpl", "tpl!apps/templates/phonecontacts.tpl", 
-  "tpl!apps/templates/companies.tpl", "tpl!apps/templates/branches.tpl", "tpl!apps/templates/categories.tpl", "tpl!apps/templates/products.tpl", "tpl!apps/templates/notifications.tpl", "backbone.syphon"], 
-	function(System, leadsTpl, addleadTpl, modifyleadTpl, contactsTpl, companiesTpl, branchesTpl, categoriesTpl, productsTpl, notificationsTpl){
+define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl", "tpl!apps/templates/modifylead.tpl", "tpl!apps/templates/pcontact.tpl", 
+  "tpl!apps/templates/phonecontacts.tpl", "tpl!apps/templates/companies.tpl", "tpl!apps/templates/branches.tpl", "tpl!apps/templates/categories.tpl", 
+  "tpl!apps/templates/products.tpl", "tpl!apps/templates/notifications.tpl", "tpl!apps/templates/history.tpl", "tpl!apps/templates/ros.tpl",
+  "tpl!apps/templates/allros.tpl", "backbone.syphon"], 
+	function(System, leadsTpl, addleadTpl, modifyleadTpl, contactTpl, contactsTpl, companiesTpl, branchesTpl, categoriesTpl, productsTpl, 
+    notificationsTpl, historyTpl, rosTpl, allrosTpl){
   System.module('LeadsApp.Show.View', function(View, System, Backbone, Marionette, $, _){
     
     View.GeneratedLeads = Marionette.ItemView.extend({      
@@ -8,27 +11,27 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
         template: leadsTpl,
 
         events: {
-          "click .ioptions #btn-edit": "editIssue",
+          "click .btncall": "callLead",
         },
 
         onShow: function(){
           //$("#leadscont").unwrap();
-
+          $("#fetching").show();
           $(".page-header .title").text('MY GENERATED LEADS');
           
           var ul = $('.row > div');
           ul.empty();
 
-          $.get(System.coreRoot + "/gateway.php?generatedLeads=1", function(result) {
+          $.get(System.coreRoot + "/gateway.php?generatedLeads="+System.user.id, function(result) {
               var res = JSON.parse(result);
-              var tp;            
+              var tp = $('<div class="row"></div>');            
               res.forEach(function(element, index){
                 if (index%2 == 0) {
                   tp = $('<div class="row"></div>');
-                  var tpl = $('<div class="col-xs-6" style="border-radius:3px;"><div class="panel" style="border-bottom:8px solid #f7c331;"><div class="lead-img"><img src="img/person.png" alt="img" class="img"></div><div class="lead-text"><b>'+element.name+'</b><br><span class="desc"><i class="fa fa-phone"></i> '+element.tel+'</span><br><span class="desc"><i class="fa fa-institution"></i> '+element.company.name+'</span><br><span class="desc"><i class="fa fa-cube"></i> '+element.product.name+'</span><br><b><i class="fa fa-info-circle" style="color:#399bff"></i> '+element.status+'</b></div></div></div>');
+                  var tpl = $('<div class="col-xs-6" style="border-radius:3px;"><div class="panel" style="border-bottom:8px solid #f7c331;"><div class="lead-img"><img src="img/person.png" alt="img" class="img"></div><div class="lead-text"><b>'+element.name+'</b><br><span class="desc"><i class="fa fa-phone"></i> '+element.tel+'</span><br><span class="desc"><i class="fa fa-institution"></i> '+element.company.name+'</span><br><span class="desc"><i class="fa fa-cube"></i> '+element.product.name+'</span><br><b><i class="fa fa-info-circle" style="color:#399bff"></i> '+element.status+'</b><button type="submit" class="btn btn-success btn-block btn-square btncall" data-tel="'+element.tel+'">CALL</button></div></div></div>');
                   tpl.appendTo(tp);
                 }else{
-                  var tpl = $('<div class="col-xs-6" style="border-radius:3px;"><div class="panel" style="border-bottom:8px solid #f7c331;"><div class="lead-img"><img src="img/person.png" alt="img" class="img"></div><div class="lead-text"><b>'+element.name+'</b><br><span class="desc"><i class="fa fa-phone"></i> '+element.tel+'</span><br><span class="desc"><i class="fa fa-institution"></i> '+element.company.name+'</span><br><span class="desc"><i class="fa fa-cube"></i> '+element.product.name+'</span><br><b><i class="fa fa-info-circle" style="color:#399bff"></i> '+element.status+'</b></div></div></div>');
+                  var tpl = $('<div class="col-xs-6" style="border-radius:3px;"><div class="panel" style="border-bottom:8px solid #f7c331;"><div class="lead-img"><img src="img/person.png" alt="img" class="img"></div><div class="lead-text"><b>'+element.name+'</b><br><span class="desc"><i class="fa fa-phone"></i> '+element.tel+'</span><br><span class="desc"><i class="fa fa-institution"></i> '+element.company.name+'</span><br><span class="desc"><i class="fa fa-cube"></i> '+element.product.name+'</span><br><b><i class="fa fa-info-circle" style="color:#399bff"></i> '+element.status+'</b><button type="submit" class="btn btn-success btn-block btn-square btncall" data-tel="'+element.tel+'">CALL</button></div></div></div>');
                   tpl.appendTo(tp);
                   tp.appendTo(ul);
                   tp = $('<div class="row"></div>');
@@ -38,18 +41,18 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
               setTimeout(function(){
                 if (tp.children().length > 0) {
                   tp.appendTo(ul);
-                }
+                };
+                $("#fetching").fadeOut(1000);
               }, 500);
           });
         },
 
-        editIssue: function(e) { 
+        callLead: function(e) { 
           e.preventDefault();
           e.stopPropagation();
-          this.trigger("edit", this.model);
-          //alert("Head to latest article");
-          //this.trigger("edit:division", this);
-        }
+          var tel = $(e.currentTarget).data('tel');
+          window.open('tel:'+tel, '_system')
+        },
     });
 
     View.AssignedLeads = Marionette.ItemView.extend({      
@@ -62,17 +65,19 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
 
         onShow: function(){
           //$("#leadscont").unwrap();
-
+          $("#fetching").show();
           $(".page-header .right").css('display', 'none');
+
+          $(".page-header .title").text('MY ASSIGNED LEADS');
           
           var ul = $('.row > div');
           ul.empty();
 
           var THAT = this;
 
-          $.get(System.coreRoot + "/gateway.php?assignedLeads=1", function(result) {
+          $.get(System.coreRoot + "/gateway.php?assignedLeads="+System.user.id, function(result) {
               var res = JSON.parse(result);
-              var tp;            
+              var tp = $('<div class="row"></div>');            
               
               res.forEach(function(element, index){
                 if (index%2 == 0) {
@@ -87,13 +92,19 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
                 }
               });
               
-              if (tp.children().length > 0) {
+              setTimeout(function(){
+                if (tp.children().length > 0) {
                   tp.appendTo(ul);
-              };
+                };
 
-              $('.asslead').on('click', function(e){
-                THAT.modifyStatus(e);
-              });
+                $('.asslead').on('click', function(e){
+                  THAT.modifyStatus(e);
+                });
+
+                $("#fetching").fadeOut(1000);
+              }, 300);
+
+
           });
         },
 
@@ -101,6 +112,74 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
           e.preventDefault();
           e.stopPropagation();
           //this.trigger("edit", this.model);
+          System.modifyLead = parseInt($(e.currentTarget).find('p').text(), 10);
+          //swal("Edit Mode!", "Now modifying lead. ID: "+System.modifyLead, "info");
+          System.execute("leads:modify");
+        }
+    });
+
+    View.LeadGroup = Marionette.ItemView.extend({      
+
+        template: leadsTpl,
+
+        events: {
+          //"click .asslead": "modifyStatus"
+        },
+
+        onShow: function(){
+          //$("#leadscont").unwrap();
+          $("#fetching").show();
+          $(".page-header .right").css('display', 'none');
+          
+          var ul = $('.row > div');
+          ul.empty();
+
+          var THAT = this;
+
+          if (System.leadGroup == "") {
+            System.leadGroup = "engaged";
+          }
+
+          $.get(System.coreRoot + "/gateway.php?leadGroup="+System.leadGroup+"&personell="+System.user.id, function(result) {
+
+              $(".page-header .title").text('MY '+System.leadGroup.toUpperCase()+' LEADS');
+
+              var res = JSON.parse(result);
+              var tp = $('<div class="row"></div>');            
+              
+              res.forEach(function(element, index){
+                if (index%2 == 0) {
+                  tp = $('<div class="row"></div>');
+                  var tpl = $('<div class="col-xs-6 asslead" style="border-radius:3px;"><p style="display:none">'+element.id+'</p><div class="panel" style="border-bottom:8px solid #f7c331;"><div class="lead-img"><img src="img/person.png" alt="img" class="img"></div><div class="lead-text"><b>'+element.name+'</b><br><span class="desc"><i class="fa fa-phone"></i> '+element.tel+'</span><br><span class="desc"><i class="fa fa-cube"></i> '+element.product.name+'</span><br><b><i class="fa fa-info-circle" style="color:#399bff"></i> '+element.status+'</b></div></div></div>');
+                  tpl.appendTo(tp);
+                }else{
+                  var tpl = $('<div class="col-xs-6 asslead" style="border-radius:3px;"><p style="display:none">'+element.id+'</p><div class="panel" style="border-bottom:8px solid #f7c331;"><div class="lead-img"><img src="img/person.png" alt="img" class="img"></div><div class="lead-text"><b>'+element.name+'</b><br><span class="desc"><i class="fa fa-phone"></i> '+element.tel+'</span><br><span class="desc"><i class="fa fa-cube"></i> '+element.product.name+'</span><br><b><i class="fa fa-info-circle" style="color:#399bff"></i> '+element.status+'</b></div></div></div>');
+                  tpl.appendTo(tp);
+                  tp.appendTo(ul);
+                  tp = $('<div class="row"></div>');
+                }
+              });
+              
+              setTimeout(function(){
+                if (tp.children().length > 0) {
+                  tp.appendTo(ul);
+                };
+
+                if (System.leadGroup == 'engaged') {
+                  $('.asslead').on('click', function(e){
+                    THAT.modifyStatus(e);
+                  });
+                };                
+
+                $("#fetching").fadeOut(1000);
+              }, 300);
+              
+          });
+        },
+
+        modifyStatus: function(e) { 
+          e.preventDefault();
+          e.stopPropagation();
           System.modifyLead = parseInt($(e.currentTarget).find('p').text(), 10);
           //swal("Edit Mode!", "Now modifying lead. ID: "+System.modifyLead, "info");
           System.execute("leads:modify");
@@ -119,7 +198,6 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
 
         onShow: function(){
           //$("#leadscont").unwrap();
-          System.previousView = [];
 
           System.companyid = '?';
           System.branchid = '?';
@@ -132,6 +210,7 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
           var THAT = this;
 
           if (System.structure.length == 0) {
+            $("#fetching").show();
             $.get(System.coreRoot + "/gateway.php?structure", function(result) {
               var res = JSON.parse(result);
               res.forEach(function(element, index){
@@ -142,6 +221,7 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
 
               setTimeout(function(){
                 THAT.initList();
+                $("#fetching").fadeOut(1000);
               }, 600);
             });            
           }else{
@@ -152,7 +232,7 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
 
             setTimeout(function(){
                 THAT.initList();
-              }, 600);            
+            }, 600);            
           }          
           
         },
@@ -168,8 +248,7 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
           
           $("#companies > li .imgc").on('click', function(){ 
             THAT.viewNext(parseInt($(this).parent().find('p').text(), 10));
-          });
-      
+          });  
         },
 
         viewNext: function(id) {
@@ -214,6 +293,7 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
             var tpl = $('<li><p style="display:none">'+element.id+'</p><b>'+element.name+'</b><br><span class="desc">Location, Town'+element.location+'</span><span class="status"></span></li>');
             tpl.appendTo(ul);
           });
+
         },
 
         viewCategories: function(e) {
@@ -295,6 +375,7 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
 
           System.productid = '?';
 
+
           var ul = $('.basic-list');
           ul.empty();
 
@@ -307,7 +388,7 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
           }
 
           System.productSelect.forEach(function(element, index){
-            var tpl = $('<li><p style="display:none">'+element.id+'</p><div class="imgc" style="background:none;"><img src="img/product-icon.png" alt="img" style="width:100%"></div><h3>'+element.name+'</h3><span class="desc">'+element.descr+'</span></li>');
+            var tpl = $('<li><p style="display:none">'+element.id+'</p><div class="imgc" style="background:none;"><img src="img/product-icon.png" alt="img" style="width:100%;padding:5%;"></div><h3>'+element.name+'</h3><span class="desc">'+element.descr+'</span></li>');
             tpl.appendTo(ul);
           });
 
@@ -323,7 +404,13 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
           System.productid = parseInt($(e.currentTarget).parent().find('p').text(), 10); 
           System.previousView.push('products'); 
           //alert("comp:"+System.companyid +", branch:"+System.branchid +", category:"+System.categoryid +", product:"+System.productid);
-          System.execute("leads:contacts");
+          //System.execute("leads:contacts");
+          
+          if (System.ro) {
+            System.execute("leads:finalize");  
+          } else{
+            System.execute("leads:ros");
+          };
         },
 
         viewDesc: function(e) {
@@ -344,22 +431,188 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
         }
     });
 
+    View.RO = Marionette.ItemView.extend({      
+
+        template: rosTpl,
+
+        events: {
+          "click .goback": "goBack",
+          "click #ros > li": "finalize",
+        },
+
+        onShow: function(){
+
+          System.roid = '?';
+
+          System.rid = false;
+
+          $("#fetching").show();
+
+          var ul = $('.basic-list');
+          ul.empty();
+          var branch = 0;
+          if (System.branchid != '?') {
+            branch = System.branchid;
+          }
+
+          $.get(System.coreRoot + "/service/hrm/index.php?ros&product="+System.productid+"&branch="+branch, function(result) {
+            var tp = $('<li><p style="display:none">0</p><i class="fa fa-users" style="font-size:40px; margin-left:-30px;padding-right:10px;vertical-align:middle"></i><b>Allocate Randomly</b></li>');
+            tp.appendTo(ul);
+            var res = JSON.parse(result);
+            res.forEach(function(element, index){
+              var tpl = $('<li><p style="display:none">'+element.id+'</p><i class="fa fa-user" style="font-size:40px; margin-left:-30px;padding-right:10px;vertical-align:middle"></i><b>'+element.name+'</b><span style="margin-left:10px;margin-top:-10px" class="desc">Department: '+element.dept.name+'</span></li>');
+              tpl.appendTo(ul);
+            });
+            System.ActiveROs = res;
+            setTimeout(function(){
+              $("#fetching").fadeOut(500);
+            }, 600);
+          });
+        },
+
+        finalize: function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          System.roid = $(e.currentTarget).find('p').text(); 
+          System.previousView.push('ros'); 
+          //alert("comp:"+System.companyid +", branch:"+System.branchid +", category:"+System.categoryid +", product:"+System.productid);
+          //System.execute("leads:contacts");
+          System.execute("leads:finalize");
+        },
+
+        goBack: function(id) {
+          System.execute("leads:"+System.previousView.pop());
+        }
+    });
+
+    View.AllRO = Marionette.ItemView.extend({      
+
+        template: allrosTpl,
+
+        events: {
+          "click #allros > li": "next",
+          "keyup #searchtext": "filter",
+        },
+
+        onShow: function(){
+
+          System.roid = '?';
+          System.rid = false;
+
+          $("#fetching").show();
+
+          var ul = $('.basic-list');
+          ul.empty();
+
+          $.get(System.coreRoot + "/service/hrm/index.php?allros", function(result) {
+            //var tp = $('<li><p style="display:none">0</p><i class="fa fa-users" style="font-size:40px; margin-left:-30px;padding-right:10px;vertical-align:middle"></i><b>Allocate Randomly</b></li>');
+            //tp.appendTo(ul);
+            var res = JSON.parse(result);
+            res.forEach(function(element, index){
+              var tpl = $('<li><p style="display:none">'+index+'</p><h6 style="display:none">'+element.id+'</h6><i class="fa fa-user" style="font-size:35px; margin-left:-15px;padding-right:10px;vertical-align:middle"></i><b>'+element.name+'</b><br><span style="margin-left:20px;margin-top:-10px" class="desc">'+element.company.name+' ('+element.branch.name+') -> Dept: '+element.dept.name+'</span></li>');
+              tpl.appendTo(ul);
+            });
+            System.ActiveROs = res;
+            setTimeout(function(){
+              $("#fetching").fadeOut(500);
+            }, 600);
+          });
+        },
+
+        filter: function (){
+          var key = $('#searchtext').val();
+          var results = [];
+          System.ActiveROs.forEach(function(element, index){
+            if (element.name.toLowerCase().indexOf(key.toLowerCase()) >= 0 || element.company.name.toLowerCase().indexOf(key.toLowerCase()) >= 0 || element.branch.name.toLowerCase().indexOf(key.toLowerCase()) >= 0 || element.dept.name.toLowerCase().indexOf(key.toLowerCase()) >= 0) {
+              results.push(element);
+            }
+          });
+          var THAT = this;
+          setTimeout(function () {
+            THAT.sortResults(results, 'name', true);
+          }, 200);          
+        },
+
+        sortResults: function(result, prop, asc) {
+          result = result.sort(function(a, b) {
+            if (asc) return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
+            else return (b[prop] > a[prop]) ? 1 : ((b[prop] < a[prop]) ? -1 : 0);
+          });
+          this.listROs(result);
+        },
+
+        listROs: function (ros){
+          var ul = $('.basic-list');
+          ul.empty();
+          ros.forEach(function(element, index){
+            var tpl = $('<li><p style="display:none">'+index+'</p><h6 style="display:none">'+element.id+'</h6><i class="fa fa-user" style="font-size:35px; margin-left:-15px;padding-right:10px;vertical-align:middle"></i><b>'+element.name+'</b><br><span style="margin-left:20px;margin-top:-10px" class="desc">'+element.company.name+' ('+element.branch.name+') -> Dept: '+element.dept.name+'</span></li>');
+            tpl.appendTo(ul);
+          });
+        },        
+
+        next: function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          System.roid = $(e.currentTarget).find('h6').text();
+          var ind = 0;
+          System.ActiveROs.forEach(function(element, index){
+            if (parseInt(element.id) == parseInt(System.roid, 10)) {
+              ind = index;
+            }
+          });
+          System.rid = ind;
+          System.ro = System.ActiveROs[parseInt(System.rid, 10)];
+          System.companyid = System.ro.company.id;
+          if (System.ro.branch.id != 0) {
+            System.branchid = System.ro.branch.id;
+          } else{
+            System.branchid = '?';
+          };
+          //alert(JSON.stringify(System.ro));
+          System.previousView.push('allros'); 
+          //alert("comp:"+System.companyid +", branch:"+System.branchid +", category:"+System.categoryid +", product:"+System.productid);
+          //System.execute("leads:contacts");
+          System.execute("leads:contacts");
+        },
+
+        goBack: function(id) {
+          System.execute("leads:"+System.previousView.pop());
+        }
+    });
+
     View.Contacts = Marionette.ItemView.extend({
 
-      template: contactsTpl,
+      template: contactTpl,
 
       events: {
           "click .goback": "goBack",
-          "click #contacts > li": "addLead",
+          "click .btnsub": "addLead",
           "keyup #searchtext": "filter",
+          "click .btncnt": "contactSearch"
       },
 
       onShow: function(){
-          //$("#leadscont").unwrap();
+          $("#clist").hide();
           this.contactSearch();
           System.leadName = '';
           System.leadNo = '';
           System.leadEmail = '';
+
+          if (System.ro) {
+            if (System.structure.length == 0) {
+              $("#fetching").show();
+              $.get(System.coreRoot + "/gateway.php?structure", function(result) {
+                var res = JSON.parse(result);
+                res.forEach(function(element, index){
+                  System.structure[element.company.id] = element;
+                });
+
+                setTimeout(function(){
+                  $("#fetching").fadeOut(1000);
+                }, 600);
+              });            
+            }     
+          };
       },
 
       contactSearch: function() { 
@@ -368,9 +621,11 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
           swal("Error!", "Contacts API not supported", "error");
           //alert("Contacts API not supported", "Error");
           return;
+        }else{
+          this.pickContact();
         }
 
-        if (System.phoneContacts.length > 0) {
+        /*if (System.phoneContacts.length > 0) {
           this.sortResults(System.phoneContacts, 'name', true);
           return;
         }else{
@@ -381,11 +636,93 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
           };
           var contactFields = ['displayName', 'nickname', 'phoneNumbers', 'emails'];
           navigator.contacts.find(contactFields, this.onSuccess, this.onError, searchOptions);
-        }         
+        }*/
+
 
       },
 
-      onSuccess: function (contacts){
+      pickContact: function() {
+        var THAT = this;
+        System.leadName = "";
+        System.leadNo = "";
+        navigator.contacts.pickContact(function(contact){
+          //alert(JSON.stringify(contact));
+          var cont = {};
+          cont.name = '';
+          if ($.trim(contact.displayName).length != 0) {
+            cont.name = contact.displayName ? contact.displayName : contact.nickName;
+            if (contact.phoneNumbers) {
+                cont.phone = '';
+                for (var j = 0; j < contact.phoneNumbers.length; j++) {
+                    cont.phone = contact.phoneNumbers[j].value;
+                }
+            }
+            cont.email = '';
+            if (contact.emails) {
+              for (var j = 0; j < contact.emails.length; j++) {
+                cont.email = contact.emails[j].value;
+              }
+            }
+          }
+          if (cont.name != undefined && cont.phone != undefined) {
+            System.leadName = cont.name;
+            System.leadNo = cont.phone;
+            System.leadEmail = (cont.email || '');
+            //System.execute("leads:finalize");
+            if (System.ro) {
+              var obj = System.structure[System.companyid];
+              System.previousView.push('contacts');
+              if(obj.hasOwnProperty('categories')){
+                System.execute("leads:categories");
+              }else{
+                System.execute("leads:products", 'company');
+              }  
+            } else{
+              System.trigger("leads:add");
+            };
+            
+          }else{
+            THAT.denyContact();            
+          }
+        }, function(err){
+          swal("Error", err, "error");
+        });
+      },
+
+      denyContact: function () {
+        var THAT = this;
+        swal({
+          title: "Sorry",
+          text: "This contact is missing either a name or a phone number!",
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#DD6B55",
+          confirmButtonText: "Pick Another",
+          cancelButtonText: "Skip",
+          closeOnConfirm: true,
+          closeOnCancel: true
+        },
+        function(isConfirm){
+          if (isConfirm) {
+            THAT.pickContact();
+          } else {
+            //System.execute("leads:finalize");
+            if (System.ro) {
+              var obj = System.structure[System.ro.company.id];
+              System.previousView.push('contacts');
+              if(obj.hasOwnProperty('categories')){
+                System.execute("leads:categories");
+              }else{
+                System.execute("leads:products", 'company');
+              }  
+            } else{
+              System.trigger("leads:add");
+            };
+          }
+        });
+      },
+
+      /*onSuccess: function (contacts){
         //alert(contacts.length + ' contacts found!');
         var results = [];          
 
@@ -412,6 +749,8 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
             }
           }
           if (cont.name != undefined && cont.phone != undefined) {
+              var tpl = $('<li><b>'+element.name+'</b><br><span class="desc one">'+element.phone+'</span><br><span class="desc two">'+element.email+'</span><span class="add"><i class="fa fa-user"></i></span></li>');
+              tpl.appendTo(ul);
               System.phoneContacts.push(cont);
           }
         }
@@ -420,11 +759,6 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
           var tpl = $('<li><b>No contacts</b></li>');
           tpl.appendTo(ul);
         }
-
-        var THAT = this;
-        setTimeout(function(){
-          THAT.sortResults(System.phoneContacts, 'name', true);
-        }, 7000);
       },
         
       sortResults: function(result, prop, asc) {
@@ -456,9 +790,8 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
         var THAT = this;
         setTimeout(function () {
           THAT.sortResults(results, 'name', true);
-        }, 200);
-          
-      },
+        }, 200);          
+      },*/
 
       onError: function (er){
         swal("Error!", "contact search error", "error");
@@ -467,15 +800,37 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
       addLead: function(e) {
         e.preventDefault();
         e.stopPropagation();
-        System.leadName = $(e.currentTarget).find('b').text();
-        System.leadNo = $(e.currentTarget).find('.desc.one').text();
-        System.leadEmail = ($(e.currentTarget).find('.desc.two').text() || '');
+        var data = Backbone.Syphon.serialize(this);
+        //System.leadName = $(e.currentTarget).find('b').text();
+        //System.leadNo = $(e.currentTarget).find('.desc.one').text();
+        //System.leadEmail = ($(e.currentTarget).find('.desc.two').text() || '');
+        
         //alert(System.leadName+', '+System.leadNo+', '+System.leadEmail);
-        System.execute("leads:finalize", "opt");
+        //System.execute("leads:finalize", "opt");
+        
+        if (data.name == '' || data.phone == '') {
+          swal("Missing Details!", "Please ensure you enter all necessary fields.", "error");
+        } else{
+          System.leadName = data.name;
+          System.leadNo = data.phone;
+          System.leadEmail = data.email;
+          if (System.ro) {
+            var obj = System.structure[System.ro.company.id];
+            System.previousView.push('contacts');
+            if(obj.hasOwnProperty('categories')){
+              System.execute("leads:categories");
+            }else{
+              System.execute("leads:products", 'company');
+            }
+          } else{
+            System.trigger("leads:add");
+          };
+        };
       },
 
       goBack: function(id) {
-         System.execute("leads:"+System.previousView.pop());
+        //System.execute("leads:"+System.previousView.pop());
+        System.trigger("dash:show");
       }
     });
 
@@ -490,14 +845,19 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
         },
 
         onShow: function(){
+
+          //this.contactSearch();
+
           var compsel = $('#companysel');          
           var branchsel = $('#branchsel');
           var catsel = $('#categorysel');
           var prodsel = $('#productsel');
+          var rosel = $('#rosel');
           compsel.empty();
           branchsel.empty();
           catsel.empty();
           prodsel.empty();
+          rosel.empty();
           
           var tpl = $('<option data-icon="fa fa-institution">Select Company ... </option>');
           tpl.appendTo(compsel);
@@ -537,6 +897,20 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
             tpl3.appendTo(prodsel);
           });
 
+          if (System.ro) {
+            var tplr = $('<option data-icon="fa fa-users" value="'+System.ro.id+'">'+System.ro.name+'</option>');
+            tplr.appendTo(rosel);
+          } else{
+            var tplr = $('<option data-icon="fa fa-users" value="0">Allocate Randomly</option>');
+            tplr.appendTo(rosel);
+            System.ActiveROs.forEach(function(element, index){
+              var tpl3 = $('<option data-icon="fa fa-user" value="'+element.id+'">'+element.name+'</option>');
+              tpl3.appendTo(rosel);
+            });
+          };
+
+          
+
           
           setTimeout(function (){
             $('.selectpicker').selectpicker();
@@ -547,6 +921,10 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
             }; 
             if (System.categoryid != '?') {
               $('#categorysel option[value="'+System.categoryid+'"]').prop('selected', true); 
+            }; 
+
+            if (System.roid != '?') {
+              $('#rosel option[value="'+System.roid+'"]').prop('selected', true); 
             };         
             $('.selectpicker').selectpicker('refresh');
           }, 300);
@@ -656,10 +1034,49 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
           e.stopPropagation();
           var data = Backbone.Syphon.serialize(this);
           //alert(JSON.stringify(data));
+          data['ro'] = parseInt(data['ro'], 10);
           if (data['name'] == '' || data['phone'] == '' || data['company'] == '' || data['product'] == '' ) {
             swal("Missing Details!", "Please ensure you enter all necessary fields.", "error");
           }else{
-            this.trigger("create", data);
+            //this.trigger("create", data);
+            data['operation'] = 'create';
+            data['pid'] = System.user.id;
+
+            swal({
+              title: "Everything OK?",
+              text: "Are you sure you want to create this lead?",
+              type: "info",
+              showCancelButton: true,
+              closeOnConfirm: false,
+              showLoaderOnConfirm: true,
+            },
+            function(){
+              $.post(System.coreRoot + '/gateway.php', data, function(result) {
+                if (result == 1) {                
+                  swal({
+                    title: "Success :)",
+                    text: "Lead created. Do you want to add another?",
+                    type: "success",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No",
+                    closeOnConfirm: true,
+                    closeOnCancel: true
+                  },
+                  function(isConfirm){
+                    if (isConfirm) {
+                      System.execute("leads:contacts");
+                    } else {
+                      //System.execute("leads:finalize");
+                      System.trigger("dash:show");
+                    }
+                  });
+                }else{
+                  swal("Failed :(", "Lead could not be created", "error");
+                }
+              });
+            });
           }
           
         },
@@ -676,9 +1093,14 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
 
         events: {
           "click .btnsub": "modifyLead",
+          "click .btnhist": "leadHistory",
+          "click .btncall": "callLead",
         },
 
         onShow: function(){
+
+          $("#fetching").show();
+
           var ul = $('.leadtails');
           ul.empty();
 
@@ -686,8 +1108,11 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
 
           $.get(System.coreRoot + "/gateway.php?getLead="+System.modifyLead, function(result) {
               var element = JSON.parse(result);
-              var tpl = $('<div class="col-xs-12" style="z-index:300;"><div class="panel" style="border-bottom:8px solid #f7c331;margin:10px;"><div class="lead-img" style="display: inline-block;width:30%"><img src="img/person.png" alt="img" class="img"></div><div class="lead-text" style="display: inline-block;font-size:2.8vmin;line-height:5vmin;width:60%; margin-left:25px; text-align:left; vertical-align:middle;"><b>'+element.name+'</b><br><span class="desc"><i class="fa fa-phone"></i> '+element.tel+'</span><br><span class="desc"><i class="fa fa-institution"></i> '+element.company.name+'</span><br><span class="desc"><i class="fa fa-cube"></i> '+element.product.name+'</span><br><b><i class="fa fa-info-circle" style="color:#399bff"></i> '+element.status+'</b></div></div></div>');
+              System.leadphoneno = element.tel;
+              var tpl = $('<div class="col-xs-12" style="z-index:300;"><div class="panel" style="border-bottom:8px solid #f7c331;margin:10px;"><div class="lead-img" style="display: inline-block;width:30%"><img src="img/person.png" alt="img" class="img"></div><div class="lead-text" style="display: inline-block;font-size:2.8vmin;line-height:5vmin;width:60%; padding-left:25px; text-align:left; vertical-align:middle;"><b>'+element.name+'</b><br><span class="desc"><i class="fa fa-phone"></i> '+element.tel+'</span><br><span class="desc"><i class="fa fa-institution"></i> '+element.company.name+'</span><br><span class="desc"><i class="fa fa-cube"></i> '+element.product.name+'</span><br><b><i class="fa fa-info-circle" style="color:#399bff"></i> '+element.status+'</b><button type="submit" class="btn btn-success btn-block btn-square btnhist">VIEW HISTORY</button><button type="submit" class="btn btn-success btn-block btn-square btncall">CALL</button></div></div></div>');
               tpl.appendTo(ul);
+
+              $("#fetching").fadeOut(1000);
           });
         },
 
@@ -705,6 +1130,17 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
           
         },
 
+        callLead: function(e) { 
+          e.preventDefault();
+          e.stopPropagation();
+          window.open('tel:'+System.leadphoneno, '_system')
+        },
+
+        leadHistory: function(e) { 
+          System.leadHistory = System.modifyLead;
+          System.execute("lead:history");
+        },
+
         onFormDone: function() {
           swal("Updated :)", "Prospect status modified", "success");
           System.execute("leads:assigned");
@@ -720,17 +1156,54 @@ define(["app", "tpl!apps/templates/leads.tpl", "tpl!apps/templates/quicklead.tpl
         },
 
         onShow: function(){
-          //$("#leadscont").unwrap();          
+          //$("#leadscont").unwrap(); 
+          $("#fetching").show();         
           var ul = $('#messages');
           ul.empty();
 
-          $.get(System.coreRoot + "/gateway.php?messages=1", function(result) {
+          $.get(System.coreRoot + "/gateway.php?messages="+System.user.id, function(result) {
               var res = JSON.parse(result);
               $('span.notifno').text(res.length);
               res.forEach(function(element, index){
                 var tpl = $('<li><a href="#" class="item clearfix" style="line-height:3.5vmin"><span class="from" style="line-height:3vmin">'+element.sender.name+'</span>'+element.message+'<span class="date" style="line-height:1.5vmin">'+element.date+'</span></a></li>');
                 tpl.appendTo(ul);               
               });
+
+              setTimeout(function(){
+                $("#fetching").fadeOut(1000);
+              }, 300);
+          });
+        }
+    });
+
+    View.LeadHistory = Marionette.ItemView.extend({      
+
+        template: historyTpl,
+
+        events: {
+          //"click .asslead": "modifyStatus"
+        },
+
+        onShow: function(){
+          //$("#leadscont").unwrap(); 
+          $("#fetching").show();         
+          var ul = $('#messages');
+          ul.empty();
+
+          $.get(System.coreRoot + "/gateway.php?leadhistory="+System.leadHistory, function(result) {
+              var res = JSON.parse(result);
+              
+              res.forEach(function(element, index){
+                if (index == 0) {
+                  $('span.leadhist').text(element.lead.name + ' [Status: '+element.lead.status+']');
+                };
+                var tpl = $('<li><a href="#" class="item clearfix" style="line-height:3.5vmin"><span class="from" style="line-height:3vmin">'+element.status+'</span>'+element.notes+'<span class="date" style="line-height:1.5vmin">'+element.date+'</span></a></li>');
+                tpl.appendTo(ul);               
+              });
+
+              setTimeout(function(){
+                $("#fetching").fadeOut(1000);
+              }, 300);
           });
         }
     });

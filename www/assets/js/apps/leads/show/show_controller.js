@@ -11,6 +11,11 @@ define(["app", "apps/leads/show/show_view"], function(System, View){
         System.contentRegion.show(view);
       },
 
+      showLeadGroup: function(){ 
+        var view = new View.LeadGroup();
+        System.contentRegion.show(view);
+      },
+
       addLead: function(a){ 
         var view = new View.AddLead();
         
@@ -18,10 +23,13 @@ define(["app", "apps/leads/show/show_view"], function(System, View){
 
         view.on('create', function(data) {
           data['operation'] = 'create';
-            $.post(System.coreRoot + '/gateway.php', data, function(result) {
+          
+            $.post(System.coreRoot + '/service/gateway.php', data, function(result) {
               if (result == 1) {                
                 view.triggerMethod("form:done");
-              };
+              }else{
+                
+              }
             });
         });
       },
@@ -33,7 +41,8 @@ define(["app", "apps/leads/show/show_view"], function(System, View){
 
         view.on('modify', function(data) {
           data['operation'] = 'modifyStatus';
-            $.post(System.coreRoot + '/gateway.php', data, function(result) {
+          data['pid'] = System.user.id;
+            $.post(System.coreRoot + '/service/gateway.php', data, function(result) {
               if (result == 1) {                
                 view.triggerMethod("form:done");
               };
@@ -43,82 +52,37 @@ define(["app", "apps/leads/show/show_view"], function(System, View){
 
       viewCompanies: function(a){ 
         var view = new View.Companies();
-        
         System.contentRegion.show(view);
-
-        view.on('create', function(data) {
-          data['operation'] = 'create';
-            $.post(System.coreRoot + '/gateway.php', data, function(result) {
-              if (result == 1) {
-                alert('Success: Lead created');
-                //admin.triggerMethod("form:done");
-              };
-            });
-        });
       },
 
       viewBranches: function(id){
         var view = new View.Branches();
-        
         System.contentRegion.show(view);
-
-        view.on('create', function(data) {
-          data['operation'] = 'create';
-            $.post(System.coreRoot + '/gateway.php', data, function(result) {
-              if (result == 1) {
-                alert('Success: Lead created');
-                //admin.triggerMethod("form:done");
-              };
-            });
-        });
       },
 
       viewCategories: function(a){ 
         var view = new View.Categories();
-        
         System.contentRegion.show(view);
-
-        view.on('create', function(data) {
-          data['operation'] = 'create';
-            $.post(System.coreRoot + '/gateway.php', data, function(result) {
-              if (result == 1) {
-                alert('Success: Lead created');
-                //admin.triggerMethod("form:done");
-              };
-            });
-        });
       },
 
       viewProducts: function(a){ 
         var view = new View.Products();
-        
         System.contentRegion.show(view);
+      },
 
-        view.on('create', function(data) {
-          data['operation'] = 'create';
-            $.post(System.coreRoot + '/gateway.php', data, function(result) {
-              if (result == 1) {
-                alert('Success: Lead created');
-                //admin.triggerMethod("form:done");
-              };
-            });
-        });
+      viewROs: function(a){ 
+        var view = new View.RO();
+        System.contentRegion.show(view);
+      },
+
+      viewAllROs: function(a){ 
+        var view = new View.AllRO();
+        System.contentRegion.show(view);
       },
 
       viewContacts: function(a){ 
         var view = new View.Contacts();
-        
         System.contentRegion.show(view);
-
-        view.on('create', function(data) {
-          data['operation'] = 'create';
-            $.post(System.coreRoot + '/gateway.php', data, function(result) {
-              if (result == 1) {
-                alert('Success: Lead created');
-                //admin.triggerMethod("form:done");
-              };
-            });
-        });
       },
 
       searchContact: function(layout){ 
@@ -146,6 +110,11 @@ define(["app", "apps/leads/show/show_view"], function(System, View){
 
       showNotifications: function(){ 
         var view = new View.Notifications();
+        System.contentRegion.show(view);
+      },
+
+      showLeadHistory: function(){ 
+        var view = new View.LeadHistory();
         System.contentRegion.show(view);
       }
     };

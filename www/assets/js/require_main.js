@@ -49,6 +49,11 @@ requirejs.config({
     pieplug: "plugins/easypiechart/easypiechart-plugin",
     dash: "dash",
 
+    fileupload: "plugins/upload/jquery.fileupload",
+    iframe: "plugins/upload/jquery.iframe-transport",
+    knob: "plugins/upload/jquery.knob",
+    widget: "plugins/upload/jquery.ui.widget",
+
   },
 
   shim: {
@@ -83,6 +88,7 @@ requirejs.config({
     flotpie: {
       deps: ["flotchart"]
     },
+    fileupload: ["knob", "widget", "iframe"],
     raphael: ["eve"],
     morris: ["raphael"],
     jqueryui: ["jquery"],

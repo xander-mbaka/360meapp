@@ -11,13 +11,14 @@
     <ul class="top-right">
 
     <li class="dropdown link">
-      <a href="#" data-toggle="dropdown" class="dropdown-toggle profilebox"><img src="img/profileimg.png" alt="img"><b>App User</b><span class="caret"></span></a>
+    <a href="#" data-toggle="dropdown" class="dropdown-toggle profilebox profilelink" style="font-weight:800;"><img src="img/profileimg.png" alt="img"><span class="uname"></span><span class="caret"></span></a>
         <ul class="dropdown-menu dropdown-menu-list dropdown-menu-right">
           <li role="presentation" class="dropdown-header">Quick Links</li>
+          <li><a href="#dash"><i class="fa falist fa-inbox"></i>Home</a></li>
           <li><a href="#notifications"><i class="fa falist fa-inbox"></i>Notifications</a></li>
           <li><a href="#profile"><i class="fa falist fa-wrench"></i>Me Profile</a></li>
           <li class="divider"></li>
-          <li><a href="#login"><i class="fa falist fa-lock"></i>Lock App</a></li>
+          <li><a href="#logout"><i class="fa falist fa-lock"></i>Lock App</a></li>
         </ul>
     </li>
 

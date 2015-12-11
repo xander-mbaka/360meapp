@@ -9,6 +9,8 @@ define(["app", "tpl!apps/templates/menu.tpl", "tpl!apps/templates/empty.tpl", "t
         onShow: function(){
           $("#top").unwrap();
           this.activateMenu();
+          //$('.profilelink').find('.uname').text(System.user.name);
+          $('.profilelink').find('img').attr('src', System.coreRoot+'/profile/'+System.user.pic);
         },
 
         activateMenu: function(){
@@ -157,3 +159,4 @@ define(["app", "tpl!apps/templates/menu.tpl", "tpl!apps/templates/empty.tpl", "t
 
   return System.MenuApp.Show.View;
 });
+ 

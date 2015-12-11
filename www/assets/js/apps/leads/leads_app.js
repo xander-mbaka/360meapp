@@ -5,12 +5,16 @@ define(["app", "apps/leads/show/show_controller", "tpl!apps/templates/searchcont
       appRoutes: {
         "generated" : "showGeneratedLeads",
         "assigned" : "showAssignedLeads",
+        "leadGroup" : "showLeadGroup",
         "quicklead" : "quickLead",
         "addlead" : "companies",
         "branches" : "branches",
         "categories" : "categories",
         "products" : "products",
         "modify" : "modify",
+        "history" : "history",
+        "allros" : "allros",
+        "contacts" : "contacts",
         "notifications" : "notifications",
         "searchcontact" : "searchContact"
       }
@@ -38,6 +42,12 @@ define(["app", "apps/leads/show/show_controller", "tpl!apps/templates/searchcont
       showAssignedLeads: function(){
         //System.contentRegion.show();
         showController.showAssignedLeads();
+        //System.execute("set:active:header", "Menu");
+      },
+
+       showLeadGroup: function(){
+        //System.contentRegion.show();
+        showController.showLeadGroup();
         //System.execute("set:active:header", "Menu");
       },
 
@@ -77,6 +87,18 @@ define(["app", "apps/leads/show/show_controller", "tpl!apps/templates/searchcont
         //System.execute("set:active:header", "Menu");
       },
 
+      ros: function(){
+        //System.contentRegion.show();
+        showController.viewROs();
+        //System.execute("set:active:header", "Menu");
+      },
+
+      allros: function(){
+        //System.contentRegion.show();
+        showController.viewAllROs();
+        //System.execute("set:active:header", "Menu");
+      },
+
       finalize: function(){
         //System.contentRegion.show();
         showController.addLead();
@@ -86,6 +108,12 @@ define(["app", "apps/leads/show/show_controller", "tpl!apps/templates/searchcont
       modify: function(){
         //System.contentRegion.show();
         showController.modifyLead();
+        //System.execute("set:active:header", "Menu");
+      },
+
+      history: function(){
+        //System.contentRegion.show();
+        showController.showLeadHistory();
         //System.execute("set:active:header", "Menu");
       },
 
@@ -111,6 +139,27 @@ define(["app", "apps/leads/show/show_controller", "tpl!apps/templates/searchcont
       System.navigate("companies");
       API.companies();
     });
+
+    System.on("lead:allros", function(){
+      System.navigate("allros");
+      API.allros();
+    });
+
+    System.on("contact:add", function(){
+      System.navigate("contact");
+      API.contacts();
+    });
+
+    System.on("lead:group", function(){
+      System.navigate("leadGroup");
+      API.showLeadGroup();
+    });
+
+    System.on("notifications:show", function(){
+      System.navigate("notifications");
+      API.notifications();
+    });
+
 
     System.on("profile:notifications", function(){
       System.navigate("notifications");
@@ -152,6 +201,16 @@ define(["app", "apps/leads/show/show_controller", "tpl!apps/templates/searchcont
       API.contacts(a);
     });
 
+    System.commands.setHandler("leads:ros", function(a){
+      System.navigate("ros");
+      API.ros(a);
+    });
+
+    System.commands.setHandler("leads:allros", function(a){
+      System.navigate("allros");
+      API.allros(a);
+    });
+
     System.commands.setHandler("leads:finalize", function(a){
       System.navigate("finalize");
       API.finalize(a);
@@ -160,6 +219,11 @@ define(["app", "apps/leads/show/show_controller", "tpl!apps/templates/searchcont
     System.commands.setHandler("leads:modify", function(){
       System.navigate("modify");
       API.modify();
+    });
+
+    System.commands.setHandler("lead:history", function(){
+      System.navigate("history");
+      API.history();
     });
 
      System.commands.setHandler("leads:search", function(){

@@ -7,15 +7,18 @@ define(["app", "tpl!apps/templates/dashboard.tpl", "morris"],
         template: dashTpl,
 
         events: {
-          'click div.createbtnx': 'createLead'
+          'click div.createbtnx': 'createLead',
+          'click div.robtnx': 'createForRo',
+          'click #leadgroups > li': 'showGroup',
         },
 
         onShow: function(){
           //$("#dashcont").unwrap();
+          $("#fetching").show();
           var ul = $('#messages');
           ul.empty();
 
-          $.get(System.coreRoot + "/gateway.php?dashstats=1", function(result) {
+          $.get(System.coreRoot + "/service/gateway.php?dashstats="+System.user.id, function(result) {
               var element = JSON.parse(result);
               $('span.asgleads').text(element.all);
               $('span.genleads').text(element.generated);
@@ -47,15 +50,18 @@ define(["app", "tpl!apps/templates/dashboard.tpl", "morris"],
                       return data.info;
                     }
                   });
+
+                  $("#fetching").fadeOut(1000);
+
                 }, 300);
                 
               });
           });
 
-          $.get(System.coreRoot + "/gateway.php?messages=1", function(result) {
+          $.get(System.coreRoot + "/service/gateway.php?messages="+System.user.id, function(result) {
               var res = JSON.parse(result);
               $('span.notifno').text(res.length);
-              var maxcount = 3;
+              var maxcount = 5;
               res.forEach(function(element, index){
                 if (maxcount > 0) {
                   var tpl = $('<li><a href="#" class="item clearfix" style="line-height:3.5vmin"><span class="from">'+element.sender.name+'</span>'+element.message+'<span class="date">'+element.date+'</span></a></li>');
@@ -71,7 +77,20 @@ define(["app", "tpl!apps/templates/dashboard.tpl", "morris"],
         createLead: function(e) {
           e.preventDefault();
           e.stopPropagation();
-          System.trigger("leads:add", "opt");
+          System.trigger("contact:add");
+        },
+
+        createForRo: function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          System.trigger("lead:allros");
+        },
+
+        showGroup: function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          System.leadGroup = $(e.currentTarget).data('group');
+          System.trigger("lead:group");
         }
     });
 

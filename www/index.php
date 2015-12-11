@@ -12,13 +12,14 @@
         <meta name="keywords" content="chase, 360, 360 me, leads, lead generation, lead tracking, chase group" />
         <meta name="author" content="QET Systems Ltd." >
         <link rel="shortcut icon" href="assets/images/favicon.png">
-        <title>Chase 360-Me - Everyone Knows Someone</title>
+        <title>360 Me - Everyone Knows Someone</title>
         <!--Master css-->
         <link href="css/root.css" rel="stylesheet">
     </head>
 
     <body>
-        <div class="loading"><img src="img/loading.gif" alt="loading-img"></div>
+        <div class="loading"><img src="icon.png" alt="loading-img"><span>LOADING APP</span></div>
+        <div id="fetching"><img src="img/loading.gif" alt="loading-img"><span>Taking too long ... ?? Check internet connection</span></div>
         <div id="menu"></div>
         <div id="content" class="content main"></div>
 

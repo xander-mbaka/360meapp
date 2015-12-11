@@ -6,11 +6,20 @@ define(["marionette", "sweetalert", "dotdotdot"], function(Marionette){
     contentRegion: "#content"
   });
   
-  System.coreRoot = "http://www.qet.co.ke/360";
+  System.coreRoot = "http://www.mynerrealtors.com/360";
+  //System.coreRoot = "http://localhost/360me";
 
   System.phoneContacts = [];
 
   System.structure = [];
+
+  System.leadGroup = '';
+
+  System.modifyProfile = '';
+
+  System.rid = false;
+
+  System.previousView = [];
 
   System.navigate = function(route,  options){
     options || (options = {});

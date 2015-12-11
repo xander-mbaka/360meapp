@@ -6,52 +6,67 @@ define(["app", "apps/login/show/show_view"], function(System, View){
         var empty = new System.MenuApp.Show.View.Empty();
         System.menuRegion.show(empty);
         System.contentRegion.show(view);
-        view.on('login', function(data) {
-            System.trigger("menu:show");
-            System.trigger("dash:show");
 
-        	/*if (data['cookie']) {
-        		data['operation'] = 'logincookie';
-        	}else{
-        		data['operation'] = 'login';
-        	}
-        	
-            $.post('http://192.168.0.103:3030/chase/service/users/index.php', data, function(result) {
-                if (result == 1) {
-                    var dat = {'operation':'checkauth'};
-                    $.post('http://192.168.0.103:3030/chase/service/users/index.php', dat, function(result) {
-                        if (result == 1) {                  
-                            view.triggerMethod("form:clear");
-                        }else{
-                            view.triggerMethod("auth:error");
-                        }
-                    })
-                }else{
-                	view.triggerMethod("auth:error");
-                }
-            });*/
+        view.on('login', function(data) {
+            data['operation'] = 'applogin';
+            $.post(System.coreRoot + '/service/hrm/index.php', data, function(result) {
+              if (result != 0) {
+                var data = JSON.parse(result);
+                if (data['id']) {
+                  view.triggerMethod("success", data);
+                };                    
+              }else{
+                view.triggerMethod("error");
+              }
+            });
         });
 
         view.on('forgot', function(data) {
+          //var recoverview = new View.Recover();
+          //System.contentRegion.show(recoverview);
+        });
+      },
 
-            var recoverview = new View.Recover();
-            System.contentRegion.show(recoverview);
+      showRegistration: function(){
+        var THAT = this;
+        var view = new View.Register();
+        System.contentRegion.show(view);
+        view.on('register', function(data) {
+          data['operation'] = 'register';
+          $.post(System.coreRoot + '/service/gateway.php', data, function(result) {
+            if (result = 1) {
+              view.triggerMethod("success");
+              THAT.showLogin();
+            }else{
+              view.triggerMethod("error");
+            }
+          });
+        });
 
-            recoverview.on('submit', function(data) {
-                data['operation'] = 'recoverPassword';
-                                
-                $.post('http://192.168.0.103:3030/chase/service/users/index.php', data, function(result) {
-                    if (result == 1) {
-                        recoverview.triggerMethod("form:clear");
-                    }else{
-                        recoverview.triggerMethod("auth:error");
-                    }
-                });
+
+      },
+
+      showProfile: function(){
+        var view = new View.Profile();
+        System.contentRegion.show(view);
+
+        view.on('modify', function() {
+          var aview = new View.ModifyProfile();
+          System.contentRegion.show(aview);
+          
+          aview.on('update', function(data) {
+            data['operation'] = 'updateProfile';
+            $.post(System.coreRoot + '/service/gateway.php', data, function(result) {
+              if (result != 0) {
+                  var data = JSON.parse(result);
+                  if (data['id']) {
+                    aview.triggerMethod("profupdate", data);
+                  };                    
+                }else{
+                  aview.triggerMethod("error");
+                }
             });
-
-            recoverview.on('login', function() {
-                System.trigger("login:show");
-            });
+          });
         });
       }
     };

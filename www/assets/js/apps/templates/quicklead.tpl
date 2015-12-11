@@ -26,6 +26,9 @@
             <input type="text" class="form-control" placeholder="E-mail" name="email" id="leademail">
             <i class="fa fa-envelope-o"></i>
           </div>
+          <div class="input-group group" style="display:block">
+            <textarea class="form-control" rows="3" placeholder="Additional info ..." style="height:unset;padding-left:10px;margin-bottom:20px" name="notes"></textarea>
+          </div>
         </div>
         <label class="title" style="margin:0px 0px 0px 20px">Product Details</label>
         <div class="form-area" style="position:relative">
@@ -82,10 +85,15 @@
               <option data-icon="fa fa-support" value="Internet Banking">Internet Banking</option>
             </select>            
           </div>
-          
+        </div>
+        <label class="title" style="margin:0px 0px 0px 20px">Relationship Officer</label>
+        <div class="form-area" style="position:relative">
           <div class="input-group group" style="display:block">
-            <textarea class="form-control" rows="3" placeholder="Additional info ..." style="height:unset;padding-left:10px;margin-bottom:20px" name="notes"></textarea>
-          </div>
+            <select class="selectpicker form-control xf" name="ro" id="rosel">
+              <option data-icon="fa fa-user">Select Company...</option>
+              <option data-icon="fa fa-user" value="Chase Bank">Chase Bank</option>
+            </select>            
+          </div>          
           <button type="submit" class="btn btn-default btn-block btnsub">ADD LEAD</button>
         </div>
       </form>

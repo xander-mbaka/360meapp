@@ -35,7 +35,15 @@
           <div class="panel panel-widget createbtnx" style="background:#399bff;cursor:pointer;">
             <div class="panel-body">              
               <ul class="stats widget-inline-list clearfix">
-                <li style="color:#282e3d;font-size:3.5vmin;padding:0;font-weight:600;" class="col-12"><span style="font-size:16vmin;"><i class="fa fa-plus-circle" style="color:#282e3d"></i></span><br>CREATE LEAD</li>
+                <li style="color:#282e3d;font-size:3.5vmin;padding:0;font-weight:600;" class="col-12"><span style="font-size:16vmin;"><i class="fa fa-plus-circle" style="color:#282e3d"></i></span><br>CREATE LEAD FOR COMPANY</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panel panel-widget robtnx" style="background:#9a80b9;cursor:pointer;">
+            <div class="panel-body">              
+              <ul class="stats widget-inline-list clearfix">
+                <li style="color:#282e3d;font-size:3.5vmin;padding:0;font-weight:600;" class="col-12"><span style="font-size:16vmin;"><i class="fa fa-plus-circle" style="color:#282e3d"></i></span><br>CREATE LEAD FOR RELATIONSHIP OFFICER</li>
               </ul>
             </div>
           </div>
@@ -54,10 +62,10 @@
               </div>
               <!-- Donut chart at 60-70% page width using morris charts library-->
               
-              <ul class="stats widget-inline-list clearfix">
-                <li class="col-4" style="color:#f7c331;font-size:3vmin;border-right: 2px solid #3d4350;"><span style="font-size:7vmin;color:#fff;margin-bottom:10px" class="prospleads"></span>Prospects</li>
-                <li class="col-4" style="color:#27c97b;font-size:3vmin;border-right: 2px solid #3d4350;"><span style="font-size:7vmin;color:#fff;margin-bottom:10px" class="closedleads"></span>Closed Leads</li>
-                <li class="col-4" style="color:#626876;font-size:3vmin;"><span style="font-size:7vmin;color:#fff;margin-bottom:10px" class="coldleads"></span>Cold Leads</li>
+              <ul class="stats widget-inline-list clearfix" id="leadgroups">
+                <li class="col-4" style="color:#f7c331;font-size:3vmin;border-right: 2px solid #3d4350;" data-group="engaged"><span style="font-size:7vmin;color:#fff;margin-bottom:10px" class="prospleads"></span>Prospects</li>
+                <li class="col-4" style="color:#27c97b;font-size:3vmin;border-right: 2px solid #3d4350;" data-group="closed"><span style="font-size:7vmin;color:#fff;margin-bottom:10px" class="closedleads"></span>Closed Leads</li>
+                <li class="col-4" style="color:#626876;font-size:3vmin;" data-group="cold"><span style="font-size:7vmin;color:#fff;margin-bottom:10px" class="coldleads"></span>Cold Leads</li>
               </ul>
 
             </div>

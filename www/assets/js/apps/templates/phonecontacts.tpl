@@ -22,7 +22,7 @@
 
  <!-- //////////////////////////////////////////////////////////////////////////// --> 
   <!-- START CONTAINER -->
-  <div class="container-widget">
+  <div class="container-widget" id="clist">
     <div class="row" style="margin-bottom:15px;">
       <div class="col-md-12">
         <form action="#">
@@ -34,7 +34,7 @@
         </form>
       </div>
     </div>
-   <div class="col-md-12">
+    <div class="col-md-12">
         <!-- Start Teammates -->
           <div class="panel widget panel-widget">
             <div class="panel-body">
